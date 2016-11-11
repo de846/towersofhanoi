@@ -30,8 +30,8 @@ class HanoiTower(object):
         if n != 0:
             self._move(n - 1, src, slack, dest) # recursive case
             if self._chatty:
-                print("#{}: Moving disc {} from top of {} to top of {}".format(self._num_moves + 1, n, src, dest))
-            dest.append(src.pop()) # base case
+                print("#{}: Moving disc {} from {} to {}".format(self._num_moves + 1, n, src[1], dest[1]))
+            dest[0].append(src[0].pop()) # base case
             self._num_moves += 1
             self._move(n - 1, slack, dest, src) # recursive case
 
@@ -40,7 +40,7 @@ class HanoiTower(object):
         if self._chatty:
             print("Starting Peg: {}".format(self._col_left))
             print("Destination Peg: {}".format(self._col_mid))
-        self._move(self._num_discs, self._col_left, self._col_mid, self._col_right)
+        self._move(self._num_discs, (self._col_left, "Left"), (self._col_mid, "Middle"), (self._col_right, "Right"))
         print("Tower with {} discs solved in {} moves".format(self._num_discs, self._num_moves))
         if self._chatty:
             print("Starting Peg: {}".format(self._col_left))
@@ -57,6 +57,10 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action='store_true', help='Show moves')
     args = parser.parse_args()
     discs = args.num_discs
+
+    if discs < 0:
+        print("Unable to move a negative number of discs. The universe has already ended.")
+        raise SystemExit
 
     tower = HanoiTower(discs, args.verbose)
     tower.move_discs()
